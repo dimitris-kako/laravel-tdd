@@ -13,13 +13,13 @@ class ProjectTest extends TestCase
     use WithFaker, RefreshDatabase;
 
     /** @test */
-    public function a_user_can_create_a_project ()
+    public function a_user_can_create_a_project()
     {
         $this->withoutExceptionHandling();
 
         $attributes = [
-          'title' => $this->faker->title,
-          'description' => $this->faker->text,
+            'title' => $this->faker->title,
+            'description' => $this->faker->text,
         ];
 
         $this->post('/projects', $attributes)->assertRedirect('/projects');
@@ -32,7 +32,7 @@ class ProjectTest extends TestCase
     /** @test */
     function a_project_requires_a_title()
     {
-        $attributes  = Project::factory()->raw(['title' => '']);
+        $attributes = Project::factory()->raw(['title' => '']);
 
         $this->post(route('projects.store'), $attributes)->assertSessionHasErrors('title');
     }
@@ -40,8 +40,18 @@ class ProjectTest extends TestCase
     /** @test */
     function a_project_requires_a_description()
     {
-        $attributes  = Project::factory()->raw(['description' => '']);
+        $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post(route('projects.store'), $attributes)->assertSessionHasErrors('description');
+    }
+
+    /** @test */
+    function a_user_can_view_a_project()
+    {
+        $project = Project::factory()->create();
+
+        $this->get('/projects/' . $project->id)
+            ->assertSee($project->title)
+            ->assertSee($project->description);
     }
 }

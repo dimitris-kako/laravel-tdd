@@ -17,10 +17,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
-Route::resource('projects', \App\Http\Controllers\ProjectController::class)->middleware(['auth']);
+
+Route::middleware(['auth'])->group(function (){
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->middleware(['auth'])->name('dashboard');
+
+    Route::resource('projects', \App\Http\Controllers\ProjectController::class)->middleware(['auth']);
+});
+
 
 require __DIR__ . '/auth.php';

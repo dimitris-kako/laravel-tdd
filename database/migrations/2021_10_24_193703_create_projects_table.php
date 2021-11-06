@@ -16,8 +16,8 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->text('title');
-            $table->foreignIdFor(\App\Models\User::class, 'owner_id');
             $table->text('description');
+            $table->foreignIdFor(\App\Models\User::class, 'owner_id');
             $table->timestamps();
         });
     }

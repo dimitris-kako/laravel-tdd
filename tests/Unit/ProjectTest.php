@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use function Symfony\Component\String\u;
 
 class ProjectTest extends TestCase
 {
@@ -17,6 +18,15 @@ class ProjectTest extends TestCase
     {
         $project = Project::factory()->create();
 
-        $this->assertEquals('/projects/' . $project->id, $project->path());
+        $this->assertEquals(route('projects.show', $project), url($project->path()) );
+    }
+
+    /** @test */
+    function it_belongs_to_user()
+    {
+        $project = Project::factory()->create();
+        $user = $project->owner;
+
+        $this->assertEquals($user, $project->owner);
     }
 }

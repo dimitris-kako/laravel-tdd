@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProjectReqest;
+use App\Http\Requests\ProjectRequest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\Types\Object_;
@@ -16,7 +16,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::all();
+        $projects = auth()->user()->projects;
 
         return view('projects.index', compact('projects'));
     }
@@ -24,11 +24,11 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\Response
      */
     public function create()
     {
-        //
+        return view('projects.create');
     }
 
     /**
@@ -37,9 +37,9 @@ class ProjectController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(ProjectReqest $request)
+    public function store(ProjectRequest $request)
     {
-        auth()->user()->projects()->create($request);
+        auth()->user()->projects()->create($request->all());
 
         return redirect()->route('projects.index');
     }
@@ -52,6 +52,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
+        if(auth()->user()->isNot($project->owner))
+            abort(403);
+
         return view('projects.show', compact('project'));
     }
 

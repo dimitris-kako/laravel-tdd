@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProjectReqest;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use phpDocumentor\Reflection\Types\Object_;
@@ -36,12 +37,9 @@ class ProjectController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(Request $request)
+    public function store(ProjectReqest $request)
     {
-        Project::create($request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string'
-        ]));
+        auth()->user()->projects()->create($request);
 
         return redirect()->route('projects.index');
     }

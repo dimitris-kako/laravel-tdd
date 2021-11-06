@@ -18,4 +18,5 @@ class Project extends Model
     {
         return "/projects/{$this->id}";
     }
+
 }

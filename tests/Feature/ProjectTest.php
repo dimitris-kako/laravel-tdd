@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Project;
 use Database\Factories\ProjectFactory;
+use http\Client\Curl\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -32,6 +33,8 @@ class ProjectTest extends TestCase
     /** @test */
     function a_project_requires_a_title()
     {
+        $this->actingAs(\App\Models\User::factory()->create());
+
         $attributes = Project::factory()->raw(['title' => '']);
 
         $this->post(route('projects.store'), $attributes)->assertSessionHasErrors('title');
@@ -40,6 +43,8 @@ class ProjectTest extends TestCase
     /** @test */
     function a_project_requires_a_description()
     {
+        $this->actingAs(\App\Models\User::factory()->create());
+
         $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post(route('projects.store'), $attributes)->assertSessionHasErrors('description');
@@ -48,10 +53,25 @@ class ProjectTest extends TestCase
     /** @test */
     function a_user_can_view_a_project()
     {
+        $this->actingAs(\App\Models\User::factory()->create());
+
         $project = Project::factory()->create();
 
         $this->get('/projects/' . $project->id)
             ->assertSee($project->title)
             ->assertSee($project->description);
+    }
+
+    /** @test */
+    function only_authenticated_users_can_create_projects()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->actingAs(\App\Models\User::factory()->create());
+
+        $attributes = Project::factory()->raw();
+
+        $this->post(route('projects.store'), $attributes)
+            ->assertRedirect('/login');
     }
 }

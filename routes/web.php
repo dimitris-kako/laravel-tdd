@@ -24,7 +24,10 @@ Route::middleware(['auth'])->group(function (){
         return view('dashboard');
     })->middleware(['auth'])->name('dashboard');
 
-    Route::resource('projects', \App\Http\Controllers\ProjectController::class)->middleware(['auth']);
+    Route::resource('projects', \App\Http\Controllers\ProjectController::class);
+
+    Route::post('projects/{project}/tasks', ['App\Http\Controllers\ProjectTaskController', 'store']);
+
 });
 
 

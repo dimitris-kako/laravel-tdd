@@ -1,19 +1,23 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
-</head>
-<body>
-    <h1>BirdBoard</h1>
+<x-app-layout>
+    <header class="flex items-center mb-3 py-4">
+        <div class="flex justify-between w-full">
+            <h2 class="text-gray-500 font-normal">Projects</h3>
+                <a href="{{ route('projects.create') }}" class="button">Create New</a>
+        </div>
+    </header>
 
-    <ul>
+    <div class="lg:flex lg:flex-wrap">
         @forelse($projects as $project)
-            <li><a href="{{ route('projects.show', $project) }}">{{ $project->title }}</a></li>
+            <div class="lg:w-1/3 px-3 pb-6">
+                @include('projects.partials.card')
+            </div>
         @empty
-            <p>No data</p>
+            <div>
+                <p>No projects yet.</p>
+            </div>
         @endforelse
-    </ul>
-</body>
-</html>
+
+    </div>
+
+
+</x-app-layout>

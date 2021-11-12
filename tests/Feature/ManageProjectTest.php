@@ -16,7 +16,7 @@ class ManageProjectTest extends TestCase
     /** @test */
     function a_project_requires_a_title()
     {
-        $this->actingAs(\App\Models\User::factory()->create());
+        $this->signIn();
 
         $attributes = Project::factory()->raw(['title' => '']);
 
@@ -50,7 +50,7 @@ class ManageProjectTest extends TestCase
     /** @test */
     function a_user_cannot_view_project_of_others()
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
 
         $project = Project::factory()->create();
 

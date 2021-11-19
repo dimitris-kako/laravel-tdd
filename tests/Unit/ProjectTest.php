@@ -3,6 +3,7 @@
 namespace Tests\Unit;
 
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -28,5 +29,17 @@ class ProjectTest extends TestCase
         $user = $project->owner;
 
         $this->assertEquals($user, $project->owner);
+    }
+
+    /** @test */
+    function it_can_add_a_task()
+    {
+        $project = Project::factory()->create();
+
+        $project->add_task('Test task');
+
+        $this->assertCount(1, $project->tasks);
+
+        $this->assertInstanceOf(Task::class, $project->tasks->first());
     }
 }

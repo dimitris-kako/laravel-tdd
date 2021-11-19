@@ -14,6 +14,11 @@ class Project extends Model
         'description'
     ];
 
+    public function add_task($body)
+    {
+        $this->tasks()->create(compact('body'));
+    }
+
     public function path()
     {
         return "/projects/{$this->id}";
@@ -22,6 +27,11 @@ class Project extends Model
     public function owner()
     {
         return $this->belongsTo(User::class, 'owner_id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 
 }
